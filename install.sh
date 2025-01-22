@@ -68,6 +68,16 @@ else
     done < /dev/tty
 fi
 
+echo 'Fetching and unpacking theme'
+wget -O - https://github.com/Soatrix/AthenaOS-Grub-Theme/archive/master.tar.gz | tar -xzf - --strip-components=1
+
+if [[ "$INSTALLER_LANG" != "English" ]]; then
+    echo "Changing language to ${INSTALLER_LANG}"
+    sed -i -r -e '/^\s+# EN$/{n;s/^(\s*)/\1# /}' \
+              -e '/^\s+# '"${INSTALLER_LANGS[$INSTALLER_LANG]}"'$/{n;s/^(\s*)#\s*/\1/}' theme.txt
+fi
+
+
 # Detect distro and set GRUB location and update method
 GRUB_DIR='grub'
 UPDATE_GRUB=''
